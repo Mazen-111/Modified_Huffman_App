@@ -39,3 +39,17 @@ def read_bits():
     compStream = stream[i :(len(stream)-padding)]
 
     return base_dict, compStream
+
+def decompress():
+    base_dict, comp_stream = read_bits()
+
+    reverse = {code: char for char, code in base_dict.items() if char != '~'}
+
+    result = []
+    cur = ''
+    for bit in comp_stream:
+        cur += bit
+        if cur in reverse:
+            result.append(reverse[cur])
+            cur = ''
+    return ''.join(result)
