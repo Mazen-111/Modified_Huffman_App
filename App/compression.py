@@ -15,7 +15,6 @@ def gen_codes(root, sym, dic, code = ''):
     sym = root.sym
     gen_codes(root.left, sym, dic, code+'0')
     gen_codes(root.right, sym, dic, code+'1')
-    
 
 def Modified_Huffman(txt, threshold):
     len_txt = len(txt)
@@ -125,8 +124,3 @@ def save_binary(comp_stream):
 
 #    n        m        p        char     codelen  code                   ochar   code
 # ******** ******** ******** ( ********   ****    ??   ) => n times  (  ********  ???  ) => m times
-
-
-
-
-
