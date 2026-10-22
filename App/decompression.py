@@ -1,5 +1,5 @@
-def read_binary():
-    with open('output.bin', 'rb') as file:
+def read_binary(file_name):
+    with open(f'{file_name}', 'rb') as file:
         byte = file.read(1)
         result = ""
         while byte:
@@ -7,8 +7,8 @@ def read_binary():
             byte = file.read(1)
     return result
 
-def read_bits():
-    stream = read_binary()
+def read_bits(bin_txt):
+    stream = bin_txt
     n = int(stream[:8], 2)
     m = int(stream[8:16], 2)
     padding = int(stream[16:24], 2)
@@ -40,8 +40,8 @@ def read_bits():
 
     return base_dict, compStream
 
-def decompress():
-    base_dict, comp_stream = read_bits()
+def decompress(bin_txt):
+    base_dict, comp_stream = read_bits(bin_txt)
 
     reverse = {code: char for char, code in base_dict.items() if char != '~'}
 

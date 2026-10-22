@@ -7,6 +7,15 @@ def compress(txt, thrs, save):
         comp.save_binary(comp_stream)
     return comp_stream
 
+def decompress_txt(txt):
+    result = decomp.decompress(txt)
+    return result
+
+def decompress_bin_file(file_name):
+    txt = decomp.read_binary(file_name)
+    result = decomp.decompress(txt)
+    return result
+
 def menu():
     print("==================================================")
     print("|     WELCOME TO THE HUFFMAN COMPRESSION APP     |")
@@ -23,5 +32,16 @@ def menu():
         else:
             comp_stream = compress(txt, thrs, False)
             print(f"Compressed Stream: {comp_stream}")
+    else:
+        choice = input("Would you like to decompress a normal binary text or a binary file?\n1. Binary text\n2. Binary file\n")
+        if choice == "1":
+            txt = input("Enter the text you want to decompress:\n")
+            result = decompress_txt(txt)
+            print(f"Decompressed Stream: {result}")
+        else:
+            file_name = input("Enter the file name you want to decompress:\n")
+            result = decompress_bin_file(file_name)
+            print(f"Decompressed Stream: {result}")
+        
 
 menu()
