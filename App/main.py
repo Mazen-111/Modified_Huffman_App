@@ -1,11 +1,12 @@
 import compression as comp
 import decompression as decomp
 
-def compress(txt, thrs, save):
+def compress(txt, thrs):
     comp_stream = comp.Modified_Huffman(txt, thrs)
-    if save:
-        comp.save_binary(comp_stream)
     return comp_stream
+
+def save_binary(comp_stream):
+    comp.save_binary(comp_stream)
 
 def decompress_txt(txt):
     result = decomp.decompress(txt)
@@ -26,11 +27,21 @@ def menu():
         thrs = float(input("Enter the threshold: "))
         save = input("Would you like to save the text in a binary file? ")
         if save.lower() == "yes" or save.lower() == "y":
-            comp_stream = compress(txt, thrs, True)
+            comp_stream = compress(txt, thrs)
+            
+            if comp_stream is None:
+                print("The threshold is too high, compression is not possible.")
+                return
+            
             print(f"Compressed Stream: {comp_stream}")
             print("Compressed Stream saved in a binary file successfully...")
         else:
-            comp_stream = compress(txt, thrs, False)
+            comp_stream = compress(txt, thrs)
+            
+            if comp_stream is None:
+                print("The threshold is too high, compression is not possible.")
+                return
+            save_binary(comp_stream)
             print(f"Compressed Stream: {comp_stream}")
     else:
         choice = input("Would you like to decompress a normal binary text or a binary file?\n1. Binary text\n2. Binary file\n")

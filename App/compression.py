@@ -19,20 +19,26 @@ def gen_codes(root, sym, dic, code = ''):
 def Modified_Huffman(txt, threshold):
     len_txt = len(txt)
 
-    char_freq = Counter(txt)
-    dic = {}
-    others = []
-    others_freq = 0
-
-    for char, freq in char_freq.most_common():
-        if (freq / len_txt) <= threshold:
-            others.append(char)
-            others_freq += char_freq[char]
-        else:
-            dic[char] = char_freq[char]
-
-    dic['~'] = others_freq
-    dic = dict(sorted(dic.items(), key=lambda item: item[1], reverse=True))
+    char_freq = Counter(txt).most_common()
+    dic = dict(char_freq)
+    
+    if threshold >= char_freq[0][1] / len_txt:
+        return None
+    
+    if threshold >= char_freq[-2][1] / len_txt:
+        others = []
+        others_freq = 0
+        
+        for char, freq in char_freq:
+            if (freq / len_txt) <= threshold:
+                others.append(char)
+                others_freq += char_freq[char]
+                dic.pop(char)
+            else:
+                dic[char] = char_freq[char]
+        
+        dic['~'] = others_freq
+        dic = dict(sorted(dic.items(), key=lambda item: item[1], reverse=True))
 
     nodes = []
     for key in dic:
@@ -68,18 +74,19 @@ def Modified_Huffman(txt, threshold):
     gen_codes(root, 'temp',  codes_dic)
     print(codes_dic)
 
-    i = len(dic) - 1
-    val= codes_dic["~"]
-    bit_len= len(char_freq).bit_length()
-    others.sort()
-    others_codes = {}
-    for char in others:
-        value = val + format(i, f"0{bit_len}b")
-        others_codes[char] = value
-        i += 1
+    if dic.get('~'):
+        i = len(dic) - 1
+        val= codes_dic["~"]
+        bit_len= len(char_freq).bit_length()
+        others.sort()
+        others_codes = {}
+        for char in others:
+            value = val + format(i, f"0{bit_len}b")
+            others_codes[char] = value
+            i += 1
 
-    encoded_txt = encode(txt, codes_dic, others_codes)
-    comp_stream = adding_overhead(codes_dic, others_codes, encoded_txt)
+    encoded_txt = encode(txt, codes_dic, (others_codes if dic.get('~') else {}))
+    comp_stream = adding_overhead(codes_dic, (others_codes if dic.get('~') else {}), encoded_txt)
     return comp_stream
 
 def encode(txt, huff_codes, others_codes):

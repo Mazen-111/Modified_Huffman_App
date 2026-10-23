@@ -25,9 +25,10 @@ def read_bits(bin_txt):
         base_dict[char] = code
         i += 12 + code_len
     
-    o_prefix_len = len(base_dict['~'])
-    fixed_code_len = (n+m-1).bit_length()
-    others_code_length = o_prefix_len + fixed_code_len
+    if base_dict.get('~'):
+        o_prefix_len = len(base_dict['~'])
+        fixed_code_len = (n+m-1).bit_length()
+        others_code_length = o_prefix_len + fixed_code_len
 
     for _ in range(m):
         asc = int(stream[i:i+8],2) 
